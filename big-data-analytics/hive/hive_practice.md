@@ -7,7 +7,7 @@ Replace ... with actual ec2 address
 ```ssh -i 3_key.pem hadoop@ec2-....compute-1.amazonaws.com```
 Again, copy the ec2 address from EMR page where it says Primary DNS
 5. Run ```hive -f create_db.hql ```. This part and the remaining parts are using the EMR and not done locally.
-6. Generate 3 data inputs by running these in hadoop
+6. Generate 3 data inputs by running these in hadoop 
     ```cat > /home/hadoop/customers.csv << 'EOF' 
 
     1001,2001,2024-01-15,John,Smith,CA,90210,USA 
@@ -93,166 +93,103 @@ Again, copy the ec2 address from EMR page where it says Primary DNS
     EOF ```
 
 7. Start Hive by running ```hive```
-8. Run the following commands. The expected outputs are also shown.
-hive> LOAD DATA LOCAL INPATH '/home/hadoop/customers.csv' INTO TABLE customers; 
-hive> LOAD DATA LOCAL INPATH '/home/hadoop/orders.csv' INTO TABLE orders; 
-hive> LOAD DATA LOCAL INPATH '/home/hadoop/products.csv' INTO TABLE products; 
+8. Run the following commands. The expected outputs are also shown. 
 
-hive> SELECT COUNT(*) FROM customers; 
+hive> ```LOAD DATA LOCAL INPATH '/home/hadoop/customers.csv' INTO TABLE customers; ```
+hive> ```LOAD DATA LOCAL INPATH '/home/hadoop/orders.csv' INTO TABLE orders; ```
+hive> ```LOAD DATA LOCAL INPATH '/home/hadoop/products.csv' INTO TABLE products; ```
 
-12 
+hive> ```SELECT COUNT(*) FROM customers; ```
+    12 
 
-hive> SELECT COUNT(*) FROM orders; 
-
-12 
+hive> ```SELECT COUNT(*) FROM orders; ```
+    12 
 
 hive> SELECT COUNT(*) FROM products; 
-
-12 
-
-hive> SELECT * FROM customers LIMIT 5; 
-
-1001	2001	2024-01-15	John	Smith	CA	90210	USA 
-
-1002	2002	2024-01-16	Mary	Johnson	TX	75001	USA 
-
-1003	2003	2024-01-16	David	Williams	NY	10001	USA 
-
-1004	2004	2024-01-17	Sarah	Brown	FL	33101	USA 
-
-1005	2005	2024-01-17	Michael	Jones	IL	60601	USA 
-
-hive> SELECT * FROM orders LIMIT 5; 
-
-2001	1001	1250.50 
-
-2002	1002	89.99 
-
-2003	1003	450.00 
-
-2004	1004	299.95 
-
-2005	1005	1899.99 
-
-hive> SELECT * FROM products LIMIT 5; 
-
-3001	Apple	iPhone 14 Pro 
-
-3002	Samsung	Galaxy S23 Ultra 
-
-3003	Sony	WH-1000XM5 Headphones 
-
-3004	Dell	XPS 15 Laptop 
-
-3005	Nike	Air Max 270 
-
-hive> DESCRIBE orders; 
-
-order_id            	int                 	Order ID             
-
-customer_id         	int                 	Customer ID          
-
-total               	decimal(10,2)       	Order total amount   
-
-hive> SELECT customer_id, fname, lname FROM customers LIMIT 5; 
-
-1001	John	Smith 
-
-1002	Mary	Johnson 
-
-1003	David	Williams 
-
-1004	Sarah	Brown 
-
-1005	Michael	Jones 
-
-hive> SELECT customer_id, fname, lname FROM customers ORDER BY customer_id DESC LIMIT 5; 
-
-1012	Patricia	Lopez 
-
-1011	James	Hernandez 
-
-1010	Elizabeth	Martinez 
-
-1009	William	Rodriguez 
-
-1008	Lisa	Davis 
-
-hive> SELECT * FROM customers WHERE state in ('CA', 'OR', 'WA', 'NV', 'AZ'); 
-
-1001	2001	2024-01-15	John	Smith	CA	90210	USA 
-
-1006	2006	2024-01-18	Jennifer	Garcia	CA	90211	USA 
-
-1011	2011	2024-01-20	James	Hernandez	CA	90212	USA 
-
-hive> SELECT * FROM customers WHERE fname LIKE 'J%'; 
-
-1001	2001	2024-01-15	John	Smith	CA	90210	USA 
-
-1006	2006	2024-01-18	Jennifer	Garcia	CA	90211	USA 
-
-1011	2011	2024-01-20	James	Hernandez	CA	90212	USA 
-
-hive> SELECT o.total, c.fname, c.lname from customers c JOIN orders o ON c.customer_id=o.customer_id; 
-
-1250.50	John	Smith 
-
-89.99	Mary	Johnson 
-
-450.00	David	Williams 
-
-299.95	Sarah	Brown 
-
-1899.99	Michael	Jones 
-
-34.50	Jennifer	Garcia 
-
-567.25	Robert	Miller 
-
-899.99	Lisa	Davis 
-
-78.45	William	Rodriguez 
-
-345.67	Elizabeth	Martinez 
-
-1299.99	James	Hernandez 
-
-56.78	Patricia	Lopez 
-
-hive> SELECT order_id, order_date, lname FROM (SELECT * FROM customers WHERE fname LIKE "J%")jnametable WHERE state in ('CA', 'TX') ORDER BY zipcode, lname; 
-
-2001	2024-01-15	Smith 
-
-2006	2024-01-18	Garcia 
-
-2011	2024-01-20	Hernandez 
-
-hive> SELECT c.customer_id, lname, total FROM customers c JOIN orders o ON(c.customer_id=o.customer_id); 
-
-1001	Smith	1250.50 
-
-1002	Johnson	89.99 
-
-1003	Williams	450.00 
-
-1004	Brown	299.95 
-
-1005	Jones	1899.99 
-
-1006	Garcia	34.50 
-
-1007	Miller	567.25 
-
-1008	Davis	899.99 
-
-1009	Rodriguez	78.45 
-
-1010	Martinez	345.67 
-
-1011	Hernandez	1299.99 
-
-1012	Lopez	56.78 
+    12 
+
+hive> ```SELECT * FROM customers LIMIT 5; ```
+    1001	2001	2024-01-15	John	Smith	CA	90210	USA 
+    1002	2002	2024-01-16	Mary	Johnson	TX	75001	USA 
+    1003	2003	2024-01-16	David	Williams	NY	10001	USA 
+    1004	2004	2024-01-17	Sarah	Brown	FL	33101	USA 
+    1005	2005	2024-01-17	Michael	Jones	IL	60601	USA 
+
+hive> ```SELECT * FROM orders LIMIT 5; ```
+    2001	1001	1250.50 
+    2002	1002	89.99 
+    2003	1003	450.00 
+    2004	1004	299.95 
+    2005	1005	1899.99 
+
+hive> ```SELECT * FROM products LIMIT 5; ```
+    3001	Apple	iPhone 14 Pro 
+    3002	Samsung	Galaxy S23 Ultra 
+    3003	Sony	WH-1000XM5 Headphones 
+    3004	Dell	XPS 15 Laptop 
+    3005	Nike	Air Max 270 
+
+hive> ```DESCRIBE orders; ```
+    order_id            	int                 	Order ID             
+    customer_id         	int                 	Customer ID          
+    total               	decimal(10,2)       	Order total amount   
+
+hive> ```SELECT customer_id, fname, lname FROM customers LIMIT 5; ```
+    1001	John	Smith 
+    1002	Mary	Johnson 
+    1003	David	Williams 
+    1004	Sarah	Brown 
+    1005	Michael	Jones 
+
+hive> ```SELECT customer_id, fname, lname FROM customers ORDER BY customer_id DESC LIMIT 5; ```
+    1012	Patricia	Lopez 
+    1011	James	Hernandez 
+    1010	Elizabeth	Martinez 
+    1009	William	Rodriguez 
+    1008	Lisa	Davis 
+
+hive> ```SELECT * FROM customers WHERE state in ('CA', 'OR', 'WA', 'NV', 'AZ'); ```
+    1001	2001	2024-01-15	John	Smith	CA	90210	USA 
+    1006	2006	2024-01-18	Jennifer	Garcia	CA	90211	USA 
+    1011	2011	2024-01-20	James	Hernandez	CA	90212	USA 
+
+hive> ```SELECT * FROM customers WHERE fname LIKE 'J%'; ```
+    1001	2001	2024-01-15	John	Smith	CA	90210	USA 
+    1006	2006	2024-01-18	Jennifer	Garcia	CA	90211	USA 
+    1011	2011	2024-01-20	James	Hernandez	CA	90212	USA 
+
+hive> ```SELECT o.total, c.fname, c.lname from customers c JOIN orders o ON c.customer_id=o.customer_id; ```
+    1250.50	John	Smith 
+    89.99	Mary	Johnson 
+    450.00	David	Williams 
+    299.95	Sarah	Brown 
+    1899.99	Michael	Jones 
+    34.50	Jennifer	Garcia 
+    567.25	Robert	Miller 
+    899.99	Lisa	Davis 
+    78.45	William	Rodriguez 
+    345.67	Elizabeth	Martinez 
+    1299.99	James	Hernandez 
+    56.78	Patricia	Lopez 
+
+hive> ```SELECT order_id, order_date, lname FROM (SELECT * FROM customers WHERE fname LIKE "J%")jnametable WHERE state in ('CA', 'TX') ORDER BY zipcode, lname; ```
+    2001	2024-01-15	Smith 
+    2006	2024-01-18	Garcia 
+    2011	2024-01-20	Hernandez 
+
+hive> ```SELECT c.customer_id, lname, total FROM customers c JOIN orders o ON(c.customer_id=o.customer_id); ```
+    1001	Smith	1250.50 
+    1002	Johnson	89.99 
+    1003	Williams	450.00 
+    1004	Brown	299.95 
+    1005	Jones	1899.99 
+    1006	Garcia	34.50 
+    1007	Miller	567.25 
+    1008	Davis	899.99 
+    1009	Rodriguez	78.45 
+    1010	Martinez	345.67 
+    1011	Hernandez	1299.99 
+    1012	Lopez	56.78 
 
 hive> SELECT * FROM orders CROSS JOIN products; 
 
