@@ -1,0 +1,3 @@
+{"protocol":"udp","average_duration":1045.2031520217408}
+{"protocol":"tcp","average_duration":18.03253825781916}
+{"protocol":"icmp","average_duration":0.0}
