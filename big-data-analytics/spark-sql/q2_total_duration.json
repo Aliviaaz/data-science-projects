@@ -1,0 +1,3 @@
+{"protocol":"udp","total_duration":203070430}
+{"protocol":"tcp","total_duration":33731630}
+{"protocol":"icmp","total_duration":0}
